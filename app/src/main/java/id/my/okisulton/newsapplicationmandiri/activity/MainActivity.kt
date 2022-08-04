@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
     private var page = 1
     private var totalPage = 0
     private var category = "general"
-    private var query = ""
+    private var qSearch = ""
     var progressDialog: Dialog? = null
 
 
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         getCategory()
 
         setupRvNews()
-        getData(category, query)
+        getData(category, qSearch)
 
         onSwap()
     }
@@ -88,6 +88,7 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
         }
         //Close button clicked
         searchView?.setOnCloseListener {
+            clearSearch()
             //Collapse the action view
             searchView.onActionViewCollapsed()
             searchView.maxWidth = 0
@@ -96,6 +97,12 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
         searchView?.setOnQueryTextListener(this)
         return true
+    }
+
+    private fun clearSearch() {
+        qSearch = ""
+        progressDialog?.show()
+        getData(category, qSearch)
     }
 
     private fun setupRvCategory() {
@@ -107,7 +114,7 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                     category = categoryName.toString()
                     newsAdapter.clearData()
                     progressDialog?.show()
-                    getData(category, query)
+                    getData(category, qSearch)
                 }
             }
         )
@@ -157,7 +164,7 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
                         if (visibleItemCount + pastVisibleItem >= total) {
                             binding.includeMain.linearLoad.show()
                             page = page.plus(1)
-                            getData(category, query)
+                            getData(category, qSearch)
                         }
                     }
                 }
@@ -220,7 +227,9 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         if (query != null) {
-            getData(category, query)
+            qSearch = query
+            progressDialog?.show()
+            getData(category, qSearch)
             page = 1
             newsAdapter.clearData()
         }
@@ -246,7 +255,7 @@ class MainActivity : AppCompatActivity(), SearchView.OnQueryTextListener {
             newsAdapter.clearData()
             progressDialog?.show()
             page = 1
-            getData(category, query)
+            getData(category, qSearch)
         }
     }
 }

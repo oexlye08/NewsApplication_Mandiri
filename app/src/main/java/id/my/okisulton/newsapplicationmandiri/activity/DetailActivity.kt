@@ -40,15 +40,9 @@ class DetailActivity : AppCompatActivity() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView(url: String?) {
-        progressDialog?.show()
-
+        progressDialog?.dismiss()
         binding.webView.apply {
-            webViewClient = object :WebViewClient() {
-                override fun onPageFinished(view: WebView?, url: String?) {
-                    super.onPageFinished(view, url)
-                    progressDialog?.dismiss()
-                }
-            }
+            webViewClient = WebViewClient()
             loadUrl(url.toString())
 
             val webSetting = settings
